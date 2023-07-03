@@ -10,6 +10,7 @@ textpattern/
 HISTORY.txt
 README.txt
 bin/.cache
+bin/testing.py
 *.txt
 *.pyc
 *.log
