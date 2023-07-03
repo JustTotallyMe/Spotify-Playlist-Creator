@@ -1,6 +1,4 @@
 import spotipy
-from spotipy import util
-from spotipy.oauth2 import SpotifyClientCredentials
 from spotipy.oauth2 import SpotifyOAuth
 import re
 
@@ -8,7 +6,6 @@ import re
 class Spotifyer:
     def __init__(self, clientId, clientSecret):
         self.userID = None
-        # self.sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=clientId, client_secret=clientSecret))
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=clientId, client_secret=clientSecret,
                                                             redirect_uri='http://localhost:9000',
                                                             scope='playlist-modify-private'))
