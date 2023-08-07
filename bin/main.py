@@ -3,14 +3,13 @@ from spotify_class import Spotifyer
 from configHelper import ConfigHelper
 import os
 import json
-from sys import argv
 
 test = WebScrapeForBBC()
 configFile = ConfigHelper(os.path.dirname(__file__) + '\\config.txt')
 configJson = json.loads(configFile.readFromFile())['settings']
 
 spot = Spotifyer(configJson['id_1'], configJson['id_2'])
-selectedBBC_Show = test.GetSongListAsDict(argv[1])
+selectedBBC_Show = test.GetSongListAsDict(test.GetCorrectUrl())
 
 songIds_1 = []
 songIds_2 = []
