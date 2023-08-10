@@ -4,33 +4,22 @@ from configHelper import ConfigHelper
 import os
 import json
 
-test = WebScrapeForBBC()
+webscraper = WebScrapeForBBC()
 configFile = ConfigHelper(os.path.dirname(__file__) + '\\config.txt')
 configJson = json.loads(configFile.readFromFile())['settings']
 
 spot = Spotifyer(configJson['id_1'], configJson['id_2'])
-selectedBBC_Show = test.GetSongListAsDict(test.GetCorrectUrl())
+selectedBBC_Show = webscraper.GetSongListAsDict(webscraper.GetCorrectUrl())
 
-songIds_1 = []
-songIds_2 = []
+songIds_1 = [spot.GetTrackIdForSong(selectedBBC_Show[key], key, True) for key in selectedBBC_Show]
+songIds_2 = [spot.GetTrackIdForSong(selectedBBC_Show[key], key, False) for key in selectedBBC_Show]
 
-for key in selectedBBC_Show:
-    songIds_1.append(spot.GetTrackIdForSong(selectedBBC_Show[key], key, True))
+songIds_1 = list(map(lambda songLst1, songsLst2: songsLst2 if songLst1['id'] == '00' else songLst1, songIds_1, songIds_2))
 
-for key in selectedBBC_Show:
-    songIds_2.append(spot.GetTrackIdForSong(selectedBBC_Show[key], key, False))
+listWithIds = ["spotify:track:" + entry['id'] for entry in songIds_1 if entry['id'] != '00']
 
-for i in range(len(songIds_1)):
-    if songIds_1[i]['id'] == '00':
-        songIds_1[i] = songIds_2[i]
-
-listWithIds = []
-
-for entry in songIds_1:
-    songId = entry['id']
-    if songId != '00':
-        listWithIds.append("spotify:track:" + entry['id'])
-        print("spotify:track:" + entry['id'])
+for track in listWithIds:
+    print(track)
 
 try:
     spot.ReplaceAllItemsInPlaylist(configJson['playlist_id'], listWithIds)
